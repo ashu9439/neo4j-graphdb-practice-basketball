@@ -1,0 +1,12 @@
+match (player: PLAYER)
+where player.name = "LeBron James"
+    return player,player.name, player.height as height, player.weight
+    
+    
+match (p: PLAYER {name: "LeBron James", height: 2.06})
+return p 
+
+match (player: PLAYER)
+where player.name <> "LeBron James"
+    return player,player.name, player.height as height, player.weight
+    

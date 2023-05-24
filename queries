@@ -1,3 +1,6 @@
+match (n) return n
+
+
 match (player: PLAYER)
 where player.name = "LeBron James"
     return player,player.name, player.height as height, player.weight
@@ -10,3 +13,62 @@ match (player: PLAYER)
 where player.name <> "LeBron James"
     return player,player.name, player.height as height, player.weight
     
+-- skip 1st 2 nodes and return next 2 nodes    
+match (p : PLAYER)
+where p.height >= 2
+return p
+skip 2
+limit 2
+
+
+match (p : PLAYER)
+where p.height >= 2
+return p
+order by p.height desc
+
+match (p : PLAYER), (c:COACH)
+return p,c
+
+
+MATCH pf=(p:PLAYER)-[:PLAYS_FOR]->(t:TEAM) 
+where t.name = "LA Lakers"
+RETURN pf LIMIT 25;
+
+
+
+MATCH (p:PLAYER)-[pf:PLAYS_FOR]->(t:TEAM) 
+where t.name = "LA Lakers"
+RETURN pf ,p,t;
+
+
+MATCH (p:PLAYER)-[pf:PLAYS_FOR]->(t:TEAM) 
+where t.name = "LA Lakers" 
+    RETURN pf ,p,t
+    order by pf.salary asc
+    limit 1
+
+
+// friend of leborn getting salary more than 400000000
+match (p : PLAYER {name:"LeBron James"})-[tm:TEAMMATES]-> (t:PLAYER)
+match (t)-[pf:PLAYS_FOR]->(team:TEAM)
+where pf.salary>=40000000
+return p,tm,t,pf,team
+
+
+
+// each player played against howmany teams and avg point per game
+match (p:PLAYER) -[pa:PLAYED_AGAINST]-> (t:TEAM)
+return p.name, Count(pa), avg(pa.points) as avg_pt
+
+// deleting node
+match (ja : PLAYER { name: "Ja Morantg"})
+detach delete ja
+
+
+// deleting relationship
+match (ja : PLAYER { name: "Ja Morantg"}) -[rel : PLAYS_FOR]-> (:Team)
+ delete rel
+ 
+ 
+
+
